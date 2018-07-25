@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<!-- 短信服务选择器 -->
+	<bean name="smsServiceSelector" class="com.xxx.rh.sms.service.SMSServiceSelector" ></bean>
+	<!-- 短信服务业务处理类 -->
+	<bean name="smsServiceHandler" class="com.xxx.rh.sms.service.SMSServiceHandler"></bean>
+	<!-- 短信服务管理类 -->
+	<bean name="smsServiceArrayManager" class="com.xxx.rh.sms.service.SMSServiceArrayManager"></bean>
+	<!-- 短信服务缓存管理类 -->
+	<bean name="blackListCacheManager" class="com.xxx.rh.sms.support.BlackListCacheManager"></bean>
+	<!-- 配置管理类 -->
+	<bean name="systemConfigManager" class="com.xxx.rh.sms.support.SystemConfigManager"></bean>
+	<bean name="aliSMSConfigManager" class="com.xxx.rh.sms.support.AliSMSConfigManager"></bean>
+	<bean name="tencentSMSConfigManager" class="com.xxx.rh.sms.support.TencentSMSConfigManager"></bean>
+	<!-- 短信实际渠道服务类 -->
+	<bean name="aliSMSService" class="com.xxx.rh.sms.service.impl.AliSMSServiceImpl" init-method="register"></bean>
+	<bean name="tencentSMSService" class="com.xxx.rh.sms.service.impl.TencentSMSServiceImpl" init-method="register"></bean>
+</beans>

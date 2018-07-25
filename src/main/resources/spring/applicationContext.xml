@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:websocket="http://www.springframework.org/schema/websocket"
+	   xsi:schemaLocation="
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+      http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	  http://www.springframework.org/schema/websocket
+      http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
+
+	<!-- 配置placeholder -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding" value="utf-8" />
+	</bean>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10000000"></property>
+	</bean>
+	<!-- SpringMVC在超出上传文件限制时，会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->  
+    <!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的，而且此时还没有进入到Controller方法中 -->  
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+        <property name="exceptionMappings">  
+            <props>  
+                <!-- 遇到MaxUploadSizeExceededException异常时，自动跳转到/WEB-INF/jsp/error_fileupload.jsp页面 -->  
+                <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_fileupload</prop>  
+            </props>  
+        </property>  
+    </bean>  
+	<bean class="com.xxx.rh.sms.common.Globals"></bean>
+
+	<!-- clob字段处理 -->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" lazy-init="true" />
+    <bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+        lazy-init="true">
+        <property name="nativeJdbcExtractor">
+            <bean class="org.springframework.jdbc.support.nativejdbc.C3P0NativeJdbcExtractor" />
+        </property>
+    </bean>
+    
+	<!-- 配置dataSource连接池 -->
+	<bean id="dataSource" class="${jdbc.datasource}"
+        destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxPoolSize" value="200"/>
+        <property name="minPoolSize" value="30"/>
+        <property name="maxIdleTime" value="180" />
+    </bean>
+    
+</beans>

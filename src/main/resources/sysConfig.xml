@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+
+    <LoadBalance ReadMe="是否开启负载均衡">true</LoadBalance>
+
+    <!-- round、random -->
+    <!--<SwitchStrategy ReadMe="服务切换策略">round</SwitchStrategy>-->
+
+</Root>
